@@ -3,7 +3,7 @@
         "id": "c0199faeda68aec9",
         "type": "inject",
         "z": "4e7f71c7d2330428",
-        "name": "",
+        "name": "Test Data",
         "props": [
             {
                 "p": "payload"
@@ -16,8 +16,8 @@
         "topic": "",
         "payload": "{\"data\": \"0201061BFF99040512FC5394C37C0004FFFC040CAC364200CDCBB8334C884F\"}",
         "payloadType": "json",
-        "x": 410,
-        "y": 80,
+        "x": 400,
+        "y": 40,
         "wires": [
             [
                 "fd9f38d8d7415a26"
@@ -29,7 +29,7 @@
         "type": "function",
         "z": "4e7f71c7d2330428",
         "name": "",
-        "func": "let str = msg.payload.data;\nconst data = {};\n//type\nlet part1 = \"0x\" + str[14] + str[15] ;\ndata.type = parseInt(part1);\n//temperature\nlet part2 = \"0x\" + str[16] + str[17] + str[18] + str[19];\ntemperature = parseInt(part2);\n  if (temperature > 32767) {\n    temperature -= 65534;\n  }\ndata.temperature = temperature * 0.005;\n//humidity\nlet part3 = \"0x\" + str[20] + str[21] + str[22] + str[23];\ndata.humidity = parseInt(part3) / 400.0;\n//pressure\nlet part4 = \"0x\" + str[24] + str[25] + str[26] + str[27];\ndata.pressure = parseInt(part4) + 50000;\n\nmsg.payload = data\n\nreturn msg;\n",
+        "func": "let str = msg.payload.data;\nconst data = {};\n\n//type\nlet part1 = \"0x\" + str[14] + str[15] ;\ndata.type = parseInt(part1);\n\n//temperature\nlet part2 = \"0x\" + str[16] + str[17] + str[18] + str[19];\ntemperature = parseInt(part2);\n  if (temperature > 32767) {\n    temperature -= 65534;\n  }\ndata.temperature = temperature * 0.005;\n\n//humidity\nlet part3 = \"0x\" + str[20] + str[21] + str[22] + str[23];\ndata.humidity = parseInt(part3) / 400.0;\n\n//pressure\nlet part4 = \"0x\" + str[24] + str[25] + str[26] + str[27];\ndata.pressure = parseInt(part4) + 50000;\n\n//accelerometer\n//X\nlet part5 = \"0x\" + str[28] + str[29] + str[30] + str[31];\naccelerationX = parseInt(part5);\nif (accelerationX > 32767) accelerationX -= 65536; // two's complement\ndata.accelerationX = accelerationX /1000;\n//Y\nlet part6 = \"0x\" + str[32] + str[33] + str[34] + str[35];\naccelerationY = parseInt(part6);\nif (accelerationY > 32767) accelerationY -= 65536;\ndata.accelerationY = accelerationY /1000;\n//Z\nlet part7 = \"0x\" + str[36] + str[37] + str[38] + str[39];\naccelerationZ = parseInt(part7);\nif (accelerationZ > 32767) accelerationZ -= 65536; // two's complement\ndata.accelerationZ = accelerationZ /1000\n\n//Power\nlet part8 = \"0x\" + str[40] + str[41] + str[42] + str[43];\nlet power = parseInt(part8).toString(2);\nvoltage = power.substr(0, 11);\nTXdbm = power.slice(-5);\ndata.voltage = (parseInt(voltage, 2) + 1600) / 1000;\ndata.TXdbm = (parseInt(TXdbm, 2) & 0b11111) * 2 - 40;\n\n//movementCounter\nlet part9 = \"0x\" + str[44] + str[45];\ndata.movementCounter = parseInt(part9);\n\n//measurementSequenceNumber\nlet part10 = \"0x\" + str[46] + str[47] + str[48] + str[49];\ndata.measurementSequenceNumber = parseInt(part10);\n\n//mac\nlet part11 = str.slice(-12);\ndata.mac = part11;\n\nmsg.payload = data\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -59,5 +59,55 @@
         "x": 730,
         "y": 80,
         "wires": []
+    },
+    {
+        "id": "c2515322ba5f69aa",
+        "type": "inject",
+        "z": "4e7f71c7d2330428",
+        "name": "Min Data",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\": \"0201061BFF9904058001000000008001800180010000000000CBB8334C884F\"}",
+        "payloadType": "json",
+        "x": 400,
+        "y": 80,
+        "wires": [
+            [
+                "fd9f38d8d7415a26"
+            ]
+        ]
+    },
+    {
+        "id": "548889d816ae0fa9",
+        "type": "inject",
+        "z": "4e7f71c7d2330428",
+        "name": "Max Data",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\": \"0201061BFF9904057FFFFFFEFFFE7FFF7FFF7FFFFFDEFEFFFECBB8334C884F\"}",
+        "payloadType": "json",
+        "x": 400,
+        "y": 120,
+        "wires": [
+            [
+                "fd9f38d8d7415a26"
+            ]
+        ]
     }
 ]
