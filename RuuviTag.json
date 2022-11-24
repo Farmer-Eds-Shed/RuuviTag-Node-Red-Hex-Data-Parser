@@ -1,0 +1,63 @@
+[
+    {
+        "id": "c0199faeda68aec9",
+        "type": "inject",
+        "z": "4e7f71c7d2330428",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\": \"0201061BFF99040512FC5394C37C0004FFFC040CAC364200CDCBB8334C884F\"}",
+        "payloadType": "json",
+        "x": 410,
+        "y": 80,
+        "wires": [
+            [
+                "fd9f38d8d7415a26"
+            ]
+        ]
+    },
+    {
+        "id": "fd9f38d8d7415a26",
+        "type": "function",
+        "z": "4e7f71c7d2330428",
+        "name": "",
+        "func": "let str = msg.payload.data;\nconst data = {};\n//type\nlet part1 = \"0x\" + str[14] + str[15] ;\ndata.type = parseInt(part1);\n//temperature\nlet part2 = \"0x\" + str[16] + str[17] + str[18] + str[19];\ntemperature = parseInt(part2);\n  if (temperature > 32767) {\n    temperature -= 65534;\n  }\ndata.temperature = temperature * 0.005;\n//humidity\nlet part3 = \"0x\" + str[20] + str[21] + str[22] + str[23];\ndata.humidity = parseInt(part3) / 400.0;\n//pressure\nlet part4 = \"0x\" + str[24] + str[25] + str[26] + str[27];\ndata.pressure = parseInt(part4) + 50000;\n\nmsg.payload = data\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 80,
+        "wires": [
+            [
+                "cfb6a14adddababb"
+            ]
+        ]
+    },
+    {
+        "id": "cfb6a14adddababb",
+        "type": "debug",
+        "z": "4e7f71c7d2330428",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 80,
+        "wires": []
+    }
+]
